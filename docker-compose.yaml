@@ -1,0 +1,91 @@
+version: "3.3"
+services:
+
+  eureka:
+    build: ./eureka
+    hostname: eureka
+    ports:
+      - "8761:8761"
+
+  gateway:
+    build: ./gateway
+    environment:
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9000"
+    ports:
+      - "8080:8080"
+
+  microservice:
+    build: ./microservice
+    environment:
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9000"
+        -Djava.rmi.server.logCalls=true
+        -Djava.rmi.server.hostname=localhost
+        -Dcom.sun.management.jmxremote=true
+        -Dcom.sun.management.jmxremote.port=3333
+        -Dcom.sun.management.jmxremote.rmi.port=3333
+        -Dcom.sun.management.jmxremote.local.only=false
+        -Dcom.sun.management.jmxremote.authenticate=false
+        -Dcom.sun.management.jmxremote.ssl=false
+    ports:
+      - "9091:9000"
+      - "3333:3333"
+    command: >
+      /bin/sh -c "
+        while ! nc -z db 3306;
+        do
+          echo sleeping;
+          sleep 1;
+        done;
+        java -jar /app.jar
+      "
+
+  db:
+    image: mysql:5.7
+    restart: "no"
+    environment:
+      TZ: ${TZ}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - ${DB_EXTERNAL_PORT}:3306
+    volumes:
+      - my-db:/var/lib/mysql
+      - ./db/init_schema.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./db/init_data.sql:/docker-entrypoint-initdb.d/2.sql
+
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    restart: "no"
+    ports:
+      - ${PHPMYADMIN_PORT}:80
+    environment:
+      TZ: ${TZ}
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    expose:
+      - "2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: kafka:9092
+
+volumes:
+  my-db:

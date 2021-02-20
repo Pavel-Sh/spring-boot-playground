@@ -1,0 +1,12 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+
+CREATE TABLE `microservice` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+ALTER TABLE `microservice`
+  ADD PRIMARY KEY (`id`);
+COMMIT;
