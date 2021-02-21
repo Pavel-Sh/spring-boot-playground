@@ -10,16 +10,16 @@ services:
   gateway:
     build: ./gateway
     environment:
-      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9000"
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9000"
     ports:
       - "8080:8080"
 
   microservice:
     build: ./microservice
     environment:
-      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9000"
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9000"
         -Djava.rmi.server.logCalls=true
-        -Djava.rmi.server.hostname=localhost
+        -Djava.rmi.server.hostname=127.0.0.1
         -Dcom.sun.management.jmxremote=true
         -Dcom.sun.management.jmxremote.port=3333
         -Dcom.sun.management.jmxremote.rmi.port=3333
