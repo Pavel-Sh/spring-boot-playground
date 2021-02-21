@@ -1,0 +1,9 @@
+config:
+  target: "http://host.docker.internal:8080"
+  phases:
+    - duration: 300
+      arrivalRate: 10
+scenarios:
+  - flow:
+      - get:
+          url: "/microservice"

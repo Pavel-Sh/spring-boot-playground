@@ -33,6 +33,13 @@ GET `http://localhost:8080/microservice/{id}`
 
 POST `http://localhost:8080/microservice` application/json {"name":"serviceA"}
 
+## Simulate Workload
+After the app is launched and you have verified that endpoints work properly it might be required to simulate workload.
+Execute the following command to launch workload simulation:
+
+`docker-compose -f docker-compose-workload.yaml up --build`
+
+
 ## Modify RAM limits
 By default the application is not limited on both docker and java heap.
 #### 1.  Heap limits

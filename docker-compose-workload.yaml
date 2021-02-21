@@ -1,0 +1,10 @@
+version: '3.3'
+services:
+
+  artillery:
+    build: ./workload
+    working_dir: /
+    command: /bin/bash -c "artillery run /app/tests.yml -o /app/results/report.json"
+    volumes:
+      - ./workload/scenarios:/app
+      - ./workload/results:/app/results
