@@ -45,6 +45,13 @@ deploy:
 
 ## Examine
 microservice application is the one that should be examined for memory consumption.
-You can check this with VisualVm (port 3333 is already exposed).
+#### 1. Examine via VisualVM
+You can check memory consumption by connecting to port 3333.
+#### 2. Examine via docker stats
+Simply execute `docker stats`. spring-boot-playground_microservice_1 - is the container to be tracked. 
+#### 3. Examine via java jcmd
+Firstly you need to identify java app PID:
+`docker exec spring-boot-playground_microservice_1 ps`
 
-You can also track memory consumption with `docker stats`. spring-boot-playground_microservice_1 - is the container to be tracked. 
+and then execute for required PID:
+`docker exec spring-boot-playground_microservice_1 jcmd 9 VM.native_memory summary`
