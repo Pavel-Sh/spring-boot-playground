@@ -26,9 +26,22 @@ This would start and prepare all necessary components including db, kafka, eurek
 
 ## Use
 After the app is launched you can use the following endpoints:
+
 GET `http://localhost:8080/microservice`
+
 GET `http://localhost:8080/microservice/{id}`
+
 POST `http://localhost:8080/microservice` application/json {"name":"serviceA"}
+
+## Modify RAM limits
+By default the application is not limited on both docker and java heap.
+To set limits for microservice app container add the following to docker compose:
+```
+deploy:
+  resources:
+    limits:
+      memory: 300M
+```
 
 ## Examine
 microservice application is the one that should be examined for memory consumption.
