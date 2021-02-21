@@ -35,6 +35,10 @@ POST `http://localhost:8080/microservice` application/json {"name":"serviceA"}
 
 ## Modify RAM limits
 By default the application is not limited on both docker and java heap.
+#### 1.  Heap limits
+Modify microservice java command in docker-compose file to add Xmx:
+`java -Xmx100m`
+#### 2. Docker limits
 To set limits for microservice app container add the following to docker compose:
 ```
 deploy:
